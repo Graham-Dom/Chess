@@ -3,14 +3,11 @@
 #include <cstdlib>
 
 ChessPiece::ChessPiece(bool in_color):
-	color(in_color), current_square(nullptr){}
+	current_square(nullptr), color(in_color){}
 
-bool ChessPiece::get_color()
-{
-	return color;
-}
+ChessPiece::~ChessPiece(){}
 
-const Square* ChessPiece::get_square()
+const Square* ChessPiece::get_square() const
 {
 	return current_square;
 }
@@ -31,7 +28,7 @@ void ChessPiece::move_to(Square &new_square)
 	}
 }
 
-void ChessPiece::print_move_err_msg()
+void ChessPiece::print_move_err_msg() const
 {
 	std::cout << "Invalid move" << std::endl;
 }
@@ -50,6 +47,7 @@ void ChessPiece::remove_from_play()
 }
 
 Pawn::Pawn(bool in_color):ChessPiece(in_color){}
+Pawn::~Pawn(){};
 
 bool Pawn::is_valid_move(const Square &new_square)
 {
@@ -76,6 +74,7 @@ bool Pawn::is_valid_move(const Square &new_square)
 }
 
 Knight::Knight(bool in_color):ChessPiece(in_color){}
+Knight::~Knight(){};
 
 bool Knight::is_valid_move(const Square &new_square)
 {
@@ -88,6 +87,7 @@ bool Knight::is_valid_move(const Square &new_square)
 }
 
 Bishop::Bishop(bool in_color):ChessPiece(in_color){}
+Bishop::~Bishop(){};
 
 bool Bishop::is_valid_move(const Square &new_square){
 	assert(current_square);
@@ -99,6 +99,7 @@ bool Bishop::is_valid_move(const Square &new_square){
 }
 
 Rook::Rook(bool in_color):ChessPiece(in_color){}
+Rook::~Rook(){};
 
 bool Rook::is_valid_move(const Square &new_square){
 	assert(current_square);
@@ -110,6 +111,7 @@ bool Rook::is_valid_move(const Square &new_square){
 }
 
 Queen::Queen(bool in_color):ChessPiece(in_color){}
+Queen::~Queen(){};
 
 bool Queen::is_valid_move(const Square &new_square){
 	assert(current_square);
@@ -124,6 +126,7 @@ bool Queen::is_valid_move(const Square &new_square){
 }
 
 King::King(bool in_color):ChessPiece(in_color){}
+King::~King(){};
 
 bool King::is_valid_move(const Square &new_square){
 	assert(current_square);
@@ -133,12 +136,3 @@ bool King::is_valid_move(const Square &new_square){
 	return ((squares_traveled_vertically == 1 && squares_traveled_horizontally <= 1)
 		 || (squares_traveled_horizontally == 1 && squares_traveled_vertically <= 1));
 }
-
-
-
-
-
-
-
-
-
