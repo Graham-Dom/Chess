@@ -13,16 +13,6 @@ ChessPiece* Square::get_piece() const
 	return piece;
 }
 
-short Square::get_X() const
-{
-	return X;
-}
-
-short Square::get_Y() const
-{
-	return Y;
-}
-
 void Square::remove_piece()
 {
 	piece = nullptr;
@@ -34,4 +24,4 @@ bool Square::is_empty() const
 }
 
 
-Square::Square(short X_POS, short Y_POS): X(X_POS), Y(Y_POS), piece(nullptr){};
+Square::Square(short X_POS, short Y_POS):piece(nullptr), X(X_POS), Y(Y_POS){};
