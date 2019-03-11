@@ -1,6 +1,8 @@
 #include "ChessPiece.h"
 #include "Square.h"
 #include <cassert>
+#include <iostream>
+using namespace std;
 
 int main(){
 
@@ -18,6 +20,8 @@ int main(){
 	Pawn p1(false);
 	p.place(s);
 	p1.place(s7);
+	cout << p.letter_representation() << endl;
+	cout << p1.letter_representation() << endl;
 
 	assert(!p.is_valid_move(s));
 	assert(!p.is_valid_move(s1));
