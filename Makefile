@@ -12,7 +12,7 @@ debug: PieceTests
 PieceTests: ChessPiece.cpp Square.cpp PieceTests.cpp
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
-PlayerTests: ChessPiece.cpp Square.cpp Player.cpp PlayerTests.cpp
+PlayerTests: ChessPiece.cpp Square.cpp Board.cpp Player.cpp PlayerTests.cpp
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
 clean:
