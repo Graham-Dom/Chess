@@ -52,8 +52,8 @@ Pawn::~Pawn(){};
 bool Pawn::is_valid_move(const Square &new_square)
 {
 	assert(current_square);
-	int squares_traveled_vertically = new_square.get_Y() - current_square->get_Y();
-	int squares_traveled_horizontally = new_square.get_X() - current_square->get_X();
+	const int squares_traveled_vertically = new_square.Y - current_square->Y;
+	const int squares_traveled_horizontally = new_square.X - current_square->X;
 	
 	if (squares_traveled_vertically == 1){
 		
@@ -73,17 +73,28 @@ bool Pawn::is_valid_move(const Square &new_square)
 	else return false;
 }
 
+char Pawn::letter_representation() const
+{
+	return (color)?'p':'P';
+}
+
+
 Knight::Knight(bool in_color):ChessPiece(in_color){}
 Knight::~Knight(){};
 
 bool Knight::is_valid_move(const Square &new_square)
 {
 	assert(current_square);
-	int squares_traveled_vertically = abs(new_square.get_Y() - current_square->get_Y());
-	int squares_traveled_horizontally = abs(new_square.get_X() - current_square->get_X());
+	const int squares_traveled_vertically = abs(new_square.Y - current_square->Y);
+	const int squares_traveled_horizontally = abs(new_square.X - current_square->X);
 
 	return ((squares_traveled_horizontally == 2 && squares_traveled_vertically == 1)
 		 || (squares_traveled_horizontally == 1 && squares_traveled_vertically == 2));
+}
+
+char Knight::letter_representation() const
+{
+	return (color)?'n':'N';
 }
 
 Bishop::Bishop(bool in_color):ChessPiece(in_color){}
@@ -91,11 +102,16 @@ Bishop::~Bishop(){};
 
 bool Bishop::is_valid_move(const Square &new_square){
 	assert(current_square);
-	int squares_traveled_vertically = abs(new_square.get_Y() - current_square->get_Y());
-	int squares_traveled_horizontally = abs(new_square.get_X() - current_square->get_X());
+	const int squares_traveled_vertically = abs(new_square.Y - current_square->Y);
+	const int squares_traveled_horizontally = abs(new_square.X - current_square->X);
 
 	return (squares_traveled_vertically == squares_traveled_horizontally
 		 && squares_traveled_vertically > 0);
+}
+
+char Bishop::letter_representation() const
+{
+	return (color)?'b':'B';
 }
 
 Rook::Rook(bool in_color):ChessPiece(in_color){}
@@ -103,11 +119,16 @@ Rook::~Rook(){};
 
 bool Rook::is_valid_move(const Square &new_square){
 	assert(current_square);
-	int squares_traveled_vertically = abs(new_square.get_Y() - current_square->get_Y());
-	int squares_traveled_horizontally = abs(new_square.get_X() - current_square->get_X());
+	const int squares_traveled_vertically = abs(new_square.Y - current_square->Y);
+	const int squares_traveled_horizontally = abs(new_square.X - current_square->X);
 
 	return ((squares_traveled_horizontally == 0 && squares_traveled_vertically > 0)
 		||  (squares_traveled_vertically == 0 && squares_traveled_horizontally > 0));
+}
+
+char Rook::letter_representation() const
+{
+	return (color)?'r':'R';
 }
 
 Queen::Queen(bool in_color):ChessPiece(in_color){}
@@ -115,8 +136,8 @@ Queen::~Queen(){};
 
 bool Queen::is_valid_move(const Square &new_square){
 	assert(current_square);
-	int squares_traveled_vertically = abs(new_square.get_Y() - current_square->get_Y());
-	int squares_traveled_horizontally = abs(new_square.get_X() - current_square->get_X());
+	const int squares_traveled_vertically = abs(new_square.Y - current_square->Y);
+	const int squares_traveled_horizontally = abs(new_square.X - current_square->X);
 
 	return (((squares_traveled_horizontally == 0 && squares_traveled_vertically > 0)
 		||  (squares_traveled_vertically == 0 && squares_traveled_horizontally > 0))
@@ -125,14 +146,24 @@ bool Queen::is_valid_move(const Square &new_square){
 		 && squares_traveled_vertically > 0));
 }
 
+char Queen::letter_representation() const
+{
+	return (color)?'q':'Q';
+}
+
 King::King(bool in_color):ChessPiece(in_color){}
 King::~King(){};
 
 bool King::is_valid_move(const Square &new_square){
 	assert(current_square);
-	int squares_traveled_vertically = abs(new_square.get_Y() - current_square->get_Y());
-	int squares_traveled_horizontally = abs(new_square.get_X() - current_square->get_X());
+	const int squares_traveled_vertically = abs(new_square.Y - current_square->Y);
+	const int squares_traveled_horizontally = abs(new_square.X - current_square->X);
 
 	return ((squares_traveled_vertically == 1 && squares_traveled_horizontally <= 1)
 		 || (squares_traveled_horizontally == 1 && squares_traveled_vertically <= 1));
+}
+
+char King::letter_representation() const
+{
+	return (color)?'k':'K';
 }
