@@ -7,6 +7,11 @@ ChessPiece::ChessPiece(bool in_color):
 
 ChessPiece::~ChessPiece(){}
 
+Square* ChessPiece::get_square()
+{
+	return current_square;
+}
+
 const Square* ChessPiece::get_square() const
 {
 	return current_square;
@@ -14,23 +19,10 @@ const Square* ChessPiece::get_square() const
 
 void ChessPiece::move_to(Square &new_square)
 {
-	// Move a piece from one square to another
-	if (is_valid_move(new_square)) 
-	{
-		current_square->remove_piece();
-		new_square.set_piece(*this);
-		current_square = &new_square;
-		has_moved = true;
-	}
-
-	else {
-		print_move_err_msg();
-	}
-}
-
-void ChessPiece::print_move_err_msg() const
-{
-	std::cout << "Invalid move" << std::endl;
+	current_square->remove_piece();
+	new_square.set_piece(*this);
+	current_square = &new_square;
+	has_moved = true;
 }
 
 void ChessPiece::place(Square &starting_square)
@@ -46,13 +38,19 @@ void ChessPiece::remove_from_play()
 	current_square = nullptr;
 }
 
+bool ChessPiece::is_in_play() const
+{
+	return (current_square != nullptr);
+}
+
 Pawn::Pawn(bool in_color):ChessPiece(in_color){}
 Pawn::~Pawn(){};
 
-bool Pawn::is_valid_move(const Square &new_square)
+bool Pawn::is_valid_move(const Square &new_square) const
 {
+	auto direction = (color)? 1:-1;
 	assert(current_square);
-	const int squares_traveled_vertically = new_square.Y - current_square->Y;
+	const int squares_traveled_vertically = (new_square.Y - current_square->Y) * direction;
 	const int squares_traveled_horizontally = new_square.X - current_square->X;
 	
 	if (squares_traveled_vertically == 1){
@@ -82,7 +80,7 @@ char Pawn::letter_representation() const
 Knight::Knight(bool in_color):ChessPiece(in_color){}
 Knight::~Knight(){};
 
-bool Knight::is_valid_move(const Square &new_square)
+bool Knight::is_valid_move(const Square &new_square) const
 {
 	assert(current_square);
 	const int squares_traveled_vertically = abs(new_square.Y - current_square->Y);
@@ -100,7 +98,8 @@ char Knight::letter_representation() const
 Bishop::Bishop(bool in_color):ChessPiece(in_color){}
 Bishop::~Bishop(){};
 
-bool Bishop::is_valid_move(const Square &new_square){
+bool Bishop::is_valid_move(const Square &new_square) const
+{
 	assert(current_square);
 	const int squares_traveled_vertically = abs(new_square.Y - current_square->Y);
 	const int squares_traveled_horizontally = abs(new_square.X - current_square->X);
@@ -117,7 +116,8 @@ char Bishop::letter_representation() const
 Rook::Rook(bool in_color):ChessPiece(in_color){}
 Rook::~Rook(){};
 
-bool Rook::is_valid_move(const Square &new_square){
+bool Rook::is_valid_move(const Square &new_square) const
+{
 	assert(current_square);
 	const int squares_traveled_vertically = abs(new_square.Y - current_square->Y);
 	const int squares_traveled_horizontally = abs(new_square.X - current_square->X);
@@ -134,7 +134,8 @@ char Rook::letter_representation() const
 Queen::Queen(bool in_color):ChessPiece(in_color){}
 Queen::~Queen(){};
 
-bool Queen::is_valid_move(const Square &new_square){
+bool Queen::is_valid_move(const Square &new_square) const
+{
 	assert(current_square);
 	const int squares_traveled_vertically = abs(new_square.Y - current_square->Y);
 	const int squares_traveled_horizontally = abs(new_square.X - current_square->X);
@@ -154,7 +155,8 @@ char Queen::letter_representation() const
 King::King(bool in_color):ChessPiece(in_color){}
 King::~King(){};
 
-bool King::is_valid_move(const Square &new_square){
+bool King::is_valid_move(const Square &new_square) const
+{
 	assert(current_square);
 	const int squares_traveled_vertically = abs(new_square.Y - current_square->Y);
 	const int squares_traveled_horizontally = abs(new_square.X - current_square->X);
