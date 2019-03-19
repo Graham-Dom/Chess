@@ -5,10 +5,13 @@
 #include <algorithm>
 #include <cstdlib>
 #include <memory>
+#include <iostream>
+#include <string>
+#include <stdexcept>
+#include <regex>
 
 class Player
 {
-	// Data
 	const bool color;
 	bool in_check = false;
 	std::vector<std::unique_ptr<ChessPiece>> pieces;
@@ -17,12 +20,10 @@ class Player
 
 	struct Move
 	{
-		const Square& start_square;
-		const Square& end_square;
+		Square& start_square;
+		Square& end_square;
 		Move(Square& start, Square& end);
 	};
-
-	// Methods
 
 	void setup_pieces();
 	void set_pawns();
@@ -32,14 +33,15 @@ class Player
 	void set_queen();
 	void set_king();
 
-	const Square& king_location() const;
+	Square& king_location() const;
+
 	Move get_input_move() const;
 
 	bool is_valid_move(const Move &move) const;
 	bool is_valid_destination_square(const Move &move) const;
 	bool path_is_clear(const Move &move) const;
 	std::vector<const Square*> squares_on_move_path(const Move &move) const;
-	bool move_puts_player_in_check(const Move * move);
+	bool move_puts_player_in_check(const Move &move);
 	
 	void move_piece(const Move &move);
 
@@ -48,5 +50,6 @@ class Player
 	bool in_check_mate();
 public:
 	Player(bool in_color, Board &board);
-	//void take_turn();
+	void introduce_other_player(Player *other);
+	void take_turn();
 };
