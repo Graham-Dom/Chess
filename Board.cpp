@@ -15,7 +15,7 @@ void Board::display()
 {
 	cout << "_________________________________________________" << endl;
 
-	for (int i = 0; i < 8; ++i){
+	for (int i = 7; i >= 0; --i){
 		cout << "|     |     |     |     |     |     |     |     |" << endl;
 		cout << "|  ";
 		for (int j = 0; j < 8; ++j){
