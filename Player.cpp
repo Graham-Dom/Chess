@@ -18,7 +18,6 @@ void Player::setup_pieces()
 	set_pawns();
 }
 
-
 void Player::set_pawns()
 {
 	const int row = (color)? 1:6;
@@ -70,9 +69,20 @@ void Player::set_king()
 	pieces.back()->place(board[4][row]);
 }
 
-const Square& Player::king_location() const
+Square& Player::king_location() const
 {
 	return *pieces[0]->get_square();
+}
+
+bool Player::is_valid_move(const Move &move) const
+{
+	const ChessPiece * piece_to_move = move.start_square.get_piece();
+	if (!piece_to_move->color == color) return false;
+	if (!piece_to_move->is_in_play()) return false;
+	if (!piece_to_move->is_valid_move(move.end_square)) return false;
+	if (!path_is_clear(move)) return false;
+
+	return true;
 }
 
 bool Player::is_valid_destination_square(const Move &move) const
@@ -82,6 +92,7 @@ bool Player::is_valid_destination_square(const Move &move) const
 
 bool Player::path_is_clear(const Move &move) const
 {
+	// Check if the squares BETWEEN the start and end square are epmty
 	const vector<const Square*> move_path = squares_on_move_path(move);
 
 	for (auto sqr : move_path)
@@ -126,10 +137,92 @@ vector<const Square*> Player::squares_on_move_path(const Move &move) const
 	return move_path;
 }
 
+bool Player::move_puts_player_in_check(const Move &move) 
+{	
+	// Temporarily make the move, and see if it gives access to the 
+	// king to any of the other players pieces
+	ChessPiece *current_piece_at_destination = move.end_square.get_piece();
+	move.start_square.get_piece()->move_to(move.end_square);
+	bool results_in_check = false;
+	
+	for (auto &piece: other_player->pieces)
+	{
+		if (piece->is_in_play())
+		{
+			const Move potential_check_move(*(piece->get_square()), king_location());
+			if (other_player->is_valid_move(potential_check_move)){
+				results_in_check = true;
+			}
+		}
+	}
 
+	move.end_square.get_piece()->move_to(move.start_square);
+	cout << move.end_square.is_empty();
+	if (current_piece_at_destination)
+	{
+		current_piece_at_destination->place(move.end_square);
+	}
 
+	return results_in_check;
+}
 
+void Player::move_piece(const Move &move)
+{
+	move.start_square.get_piece()->move_to(move.end_square);
+}
 
+void Player::introduce_other_player(Player *other)
+{
+	other_player = other;
+}
+
+Player::Move Player::get_input_move() const
+{
+	cout << "Enter a move in the format (x,y) (x,y) e.g. (4,1) (4,3)" << endl;
+	string first, second;
+	static regex rgx("\\(([0-7])\\,([0-7])\\)"); // e.g. (0,1)
+	while (true)
+	{
+		cin >> first >> second;
+
+		if (regex_match(first, rgx) && regex_match(second, rgx))
+		{
+			smatch start, end;
+			regex_search(first, start, rgx);
+			regex_search(second, end, rgx);
+
+			const int start_x = stoi(start[1]);
+			const int start_y = stoi(start[2]);
+			const int end_x = stoi(end[1]);
+			const int end_y = stoi(end[2]);
+			cout << start_x << start_y << ' ' << end_x << end_y << endl;
+
+			return Move(board[start_x][start_y], board[end_x][end_y]);
+		}
+
+		else cout << "Invalid Input\nEnter a move in the format (x,y) (x,y) e.g. (4,1) (4,3)" << endl;
+		
+	}
+}
+
+void Player::take_turn()
+{
+	bool turn_over = false;
+	while (!turn_over)
+	{
+		Move move = get_input_move();
+		if (is_valid_move(move))
+		{
+			if (!move_puts_player_in_check(move))
+			{
+				move_piece(move);
+				turn_over = true;
+			}
+			else cout << "Invalid Move: You can't put yourself in check" << endl;
+		}
+		else cout << "Invalid Move" << endl;
+	}
+}
 
 
 
