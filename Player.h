@@ -40,16 +40,20 @@ class Player
 	bool is_valid_move(const Move &move) const;
 	bool is_valid_destination_square(const Move &move) const;
 	bool path_is_clear(const Move &move) const;
-	std::vector<const Square*> squares_on_move_path(const Move &move) const;
+	std::vector<Square*> squares_on_move_path(const Move &move) const;
 	bool move_puts_player_in_check(const Move &move);
 	
 	void move_piece(const Move &move);
 
-	bool checked_other_player(const Move &move);
+	bool checked_other_player(const Move &move) const;
 	void call_check();
 	bool in_check_mate();
+	bool can_block_capture_path();
+	std::vector<Square*> king_capture_path();
+	bool king_can_escape();
 public:
 	Player(bool in_color, Board &board);
 	void introduce_other_player(Player *other);
-	void take_turn();
+	Player * get_other_player();
+	bool take_turn();
 };
